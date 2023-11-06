@@ -1,7 +1,7 @@
 {
     "name": "StickerBOT",
-    "author": "DrelezTM",
+    "author": "stickerbot",
     "prefix": "!",
-    "timezone": "Asia/Jakarta",
+    "timezone": "<insert here>",
     "groups": true
 }

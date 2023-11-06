@@ -6,19 +6,14 @@
   <h3>StickerWhatsAppBOT</h3>
   <p>Sticker WhatsAppBOT with <a href="https://github.com/pedroslopez/whatsapp-web.js/">whatsapp-web.js</a> and <a href="https://nodejs.org/en/">nodejs</a></p>
 </div>
-<div align="center">
-  <a href="#warning">Warning</a> | <a href="https://dsc.gg/DrelezTM">Report Bug</a> | <a href="https://github.com/DrelezTM/StickerWhatsAppBOT/issues">Issues</a>
-</div>
 
 ## Installation 📑
-* Clone Repository
-  ```sh
-  git clone https://github.com/DrelezTM/StickerWhatsAppBOT
-  ```
-* Install Modules
+* Clone this repository.
+* Install dependencies:
   ```sh
   npm install
   ```
+* Make sure you also have ffmpeg!
 * Start
   ```sh
   npm start
@@ -30,13 +25,13 @@
   <img alt="@stickerwhatsappbot" src="https://media.discordapp.net/attachments/858321432178196490/1023202755709517834/ss1.png?width=1440&height=241">
  
  ## Configuration 🗝
-* [config.json](https://github.com/DrelezTM/StickerWhatsAppBOT/blob/main/config/config.json)
+* [config.json](config/config.json)
   ```json
   {
     "name": "StickerBOT",
-    "author": "@DrelezTM",
+    "author": "stickerbot",
     "prefix": "!",
-    "timezone": "Asia/Jakarta",
+    "timezone": "<insert here>",
     "groups": true
   }
   ```
@@ -45,7 +40,7 @@
   * config.prefix : *prefix for command* (string)
   * config.timezone : *timezone displays the time at the specified location* (string)
   * config.groups : *to filter whether bots can respond to group chats or not* (boolean)
-* [console.txt](https://github.com/DrelezTM/StickerWhatsAppBOT/blob/main/config/console.txt)
+* [console.txt](config/console.txt)
   ```txt
   
     /$$$$$$   /$$     /$$           /$$                           /$$$$$$$   /$$$$$$  /$$$$$$$$
@@ -106,14 +101,8 @@
 * [Colors](https://www.npmjs.com/package/colors)
 * [FS](https://www.npmjs.com/package/fs)
 
-## Error or Bug 🐞
-* [Discord](https://dsc.gg/DrelezTM)
-* [YouTube](https://www.youtube.com/p/DrelezTM)
-* [Instagram](https://www.instagram.com/DrelezTM)
-* [Issues](https://github.com/DrelezTM/StickerWhatsAppBOT/issues)
-
 ## License 📜
-* [License](https://github.com/DrelezTM/StickerWhatsAppBOT/blob/main/LICENSE)
+* [License](LICENSE)
 
 ## Warning 🚧
 <p id="warning">Only works on Windows, MacOS, and Linux. <b>Can't work on Android/Termux</b>!</p>

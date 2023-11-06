@@ -10,7 +10,6 @@ const client = new Client({
         headless: true,
         args: [ '--no-sandbox', '--disable-setuid-sandbox' ]
     },
-    ffmpeg: './ffmpeg.exe',
     authStrategy: new LocalAuth({ clientId: "client" })
 });
 const config = require('./config/config.json');
