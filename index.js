@@ -1,8 +1,14 @@
 const { Client, LocalAuth } = require('whatsapp-web.js');
 const qrcode = require('qrcode-terminal');
-const moment = require('moment-timezone');
 const colors = require('colors');
 const fs = require('fs');
+const { logger } = require("./logger.js");
+
+const config = require('./config/config.json');
+const { registerCommands, registry } = require("./commands.js");
+// const { exit } = require('process');
+// exit()
+
 
 const client = new Client({
     restartOnAuthFail: true,
@@ -12,119 +18,74 @@ const client = new Client({
     },
     authStrategy: new LocalAuth({ clientId: "client" })
 });
-const config = require('./config/config.json');
+
 
 client.on('qr', (qr) => {
-    console.log(`[${moment().tz(config.timezone).format('HH:mm:ss')}] Scan the QR below : `);
+    logger.info("Scan the QR below to authenticate:");
     qrcode.generate(qr, { small: true });
 });
 
 client.on('ready', () => {
-    console.clear();
     const consoleText = './config/console.txt';
     fs.readFile(consoleText, 'utf-8', (err, data) => {
         if (err) {
-            console.log(`[${moment().tz(config.timezone).format('HH:mm:ss')}] Console Text not found!`.yellow);
-            console.log(`[${moment().tz(config.timezone).format('HH:mm:ss')}] ${config.name} is Already!`.green);
+            logger.warn("console.text not found!");
         } else {
             console.log(data.green);
-            console.log(`[${moment().tz(config.timezone).format('HH:mm:ss')}] ${config.name} is Already!`.green);
         }
+        registerCommands();
+        logger.info(`${config.name} is ready!`);
     });
 });
 
 client.on('message', async (message) => {
-    const isGroups = message.from.endsWith('@g.us') ? true : false;
-    if (isGroups === config.groups) {
+    const isGroups = message.from.endsWith('@g.us');
+    if (isGroups !== config.groups) { return; }
 
-        // Image to Sticker (With Caption)
-        if ((message.type == "image" || message.type == "video" || message.type == "gif") && (message._data.caption == `${config.prefix}sticker`)) {
-            client.sendMessage(message.from, "*[⏳]* Loading..");
-            try {
-                const media = await message.downloadMedia();
-                client.sendMessage(message.from, media, {
-                    sendMediaAsSticker: true,
-                    stickerName: config.name, // Sticker Name = Edit in 'config/config.json'
-                    stickerAuthor: config.author // Sticker Author = Edit in 'config/config.json'
-                }).then(() => {
-                    client.sendMessage(message.from, "*[✅]* Successfully!");
-                });
-            } catch {
-                client.sendMessage(message.from, "*[❎]* Failed!");
-            }
+    client.getChatById(message.id.remote).then(async (chat) => {
+        await chat.sendSeen();
+    });
 
-            // Image to Sticker (With Reply Image)
-        } else if (message.body == `${config.prefix}sticker`) {
-            const quotedMsg = await message.getQuotedMessage();
-            if (message.hasQuotedMsg && quotedMsg.hasMedia) {
-                client.sendMessage(message.from, "*[⏳]* Loading..");
-                try {
-                    const media = await quotedMsg.downloadMedia();
-                    client.sendMessage(message.from, media, {
-                        sendMediaAsSticker: true,
-                        stickerName: config.name, // Sticker Name = Edit in 'config/config.json'
-                        stickerAuthor: config.author // Sticker Author = Edit in 'config/config.json'
-                    }).then(() => {
-                        client.sendMessage(message.from, "*[✅]* Successfully!");
-                    });
-                } catch {
-                    client.sendMessage(message.from, "*[❎]* Failed!");
-                }
-            } else {
-                client.sendMessage(message.from, "*[❎]* Reply Image First!");
-            }
-
-            // Sticker to Image (With Reply Sticker)
-        } else if (message.body == `${config.prefix}image`) {
-            const quotedMsg = await message.getQuotedMessage();
-            if (message.hasQuotedMsg && quotedMsg.hasMedia) {
-                client.sendMessage(message.from, "*[⏳]* Loading..");
-                try {
-                    const media = await quotedMsg.downloadMedia();
-                    client.sendMessage(message.from, media).then(() => {
-                        client.sendMessage(message.from, "*[✅]* Successfully!");
-                    });
-                } catch {
-                    client.sendMessage(message.from, "*[❎]* Failed!");
-                }
-            } else {
-                client.sendMessage(message.from, "*[❎]* Reply Sticker First!");
-            }
-
-            // Claim or change sticker name and sticker author
-        } else if (message.body.startsWith(`${config.prefix}change`)) {
-            if (message.body.includes('|')) {
-                let name = message.body.split('|')[0].replace(message.body.split(' ')[0], '').trim();
-                let author = message.body.split('|')[1].trim();
-                const quotedMsg = await message.getQuotedMessage();
-                if (message.hasQuotedMsg && quotedMsg.hasMedia) {
-                    client.sendMessage(message.from, "*[⏳]* Loading..");
-                    try {
-                        const media = await quotedMsg.downloadMedia();
-                        client.sendMessage(message.from, media, {
-                            sendMediaAsSticker: true,
-                            stickerName: name,
-                            stickerAuthor: author
-                        }).then(() => {
-                            client.sendMessage(message.from, "*[✅]* Successfully!");
-                        });
-                    } catch {
-                        client.sendMessage(message.from, "*[❎]* Failed!");
-                    }
-                } else {
-                    client.sendMessage(message.from, "*[❎]* Reply Sticker First!");
-                }
-            } else {
-                client.sendMessage(message.from, `*[❎]* Run the command :\n*${config.prefix}change <name> | <author>*`);
-            }
-
-            // Read chat
+    let type, content;
+    if ((message.type === "image" || message.type === "video" || message.type === "gif")) {
+        type = "caption";
+        content = message._data.caption;
+    } else {
+        if (message.hasQuotedMsg) {
+            type = "reply";
         } else {
-            client.getChatById(message.id.remote).then(async (chat) => {
-                await chat.sendSeen();
-            });
+            type = "plain";
         }
+        content = message.body;
+    }
+
+    if (!content.startsWith(config.prefix)) { return; }
+    const noPrefix = content.slice(config.prefix.length);
+    const indexOfSpace = noPrefix.indexOf(" ");
+
+    let command, args;
+    if (indexOfSpace === -1) {
+        command = noPrefix;
+        args = "";
+    } else {
+        command = noPrefix.slice(0, indexOfSpace);
+        args = noPrefix.slice(indexOfSpace).trim();
+    }
+
+    if (!(command in registry.run)) { return; }
+    try {
+        if (!registry.run[command][type]) {
+            await message.reply("Command doesn't support this type of invocation.");
+            return;
+        } else {
+            await registry.run[command][type](client, message, args);
+        }
+    } catch (err) {
+        logger.error(`Error when running command '${command}': `, err);
+        await message.reply("Error when running command! See console for details.");
     }
 });
 
+console.clear();
+logger.info(`${config.name} is initializing...`);
 client.initialize();
