@@ -25,7 +25,7 @@
   <img alt="@stickerwhatsappbot" src="https://media.discordapp.net/attachments/858321432178196490/1023202755709517834/ss1.png?width=1440&height=241">
  
  ## Configuration 🗝
-* [config.json](config/config.json)
+* `config/config.json` (Create this yourself!)
   ```json
   {
     "name": "StickerBOT",
