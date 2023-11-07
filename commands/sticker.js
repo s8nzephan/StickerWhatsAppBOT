@@ -1,6 +1,13 @@
+const WAWebJS = require("whatsapp-web.js");
 const { logger } = require("../logger.js");
 const config = require('../config/config.json');
 
+/**
+ * @param {WAWebJS.Client} client
+ * @param {WAWebJS.Message} message
+ * @param {string} args
+ * @param {() => Promise<WAWebJS.MessageMedia>} downloadMedia
+ */
 async function inner(client, message, args, downloadMedia) {
     let name, author;
     if (args.length > 0) {
@@ -28,6 +35,11 @@ async function inner(client, message, args, downloadMedia) {
     await loading.delete(true);
 }
 
+/**
+ * @param {WAWebJS.Client} client
+ * @param {WAWebJS.Message} message
+ * @param {string} args
+ */
 async function reply(client, message, args) {
     const quotedMsg = await message.getQuotedMessage();
     if (quotedMsg.hasMedia) {
@@ -37,6 +49,11 @@ async function reply(client, message, args) {
     }
 }
 
+/**
+ * @param {WAWebJS.Client} client
+ * @param {WAWebJS.Message} message
+ * @param {string} args
+ */
 async function caption(client, message, args) {
     await inner(client, message, args, async () => await message.downloadMedia());
 }

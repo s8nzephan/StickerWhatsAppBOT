@@ -1,3 +1,10 @@
+const WAWebJS = require("whatsapp-web.js");
+
+/**
+ * @param {WAWebJS.Client} client
+ * @param {WAWebJS.Message} message
+ * @param {string} args
+ */
 async function reply(client, message, args) {
     const quotedMsg = await message.getQuotedMessage();
     if (quotedMsg.hasMedia) {

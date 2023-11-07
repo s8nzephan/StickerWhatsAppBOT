@@ -1,3 +1,4 @@
+const WAWebJS = require("whatsapp-web.js");
 const fs = require("node:fs");
 const { logger } = require("./logger.js");
 const config = require("./config/config.json");
@@ -25,6 +26,11 @@ function registerCommands() {
 }
 
 function registerHelp() {
+    /**
+     * @param {WAWebJS.Client} client
+     * @param {WAWebJS.Message} message
+     * @param {string} args
+     */
     async function runHelp(client, message, args) {
         if (args.length === 0) {
             let output = "Here are the commands:\n";

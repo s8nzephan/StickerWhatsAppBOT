@@ -1,5 +1,11 @@
+const WAWebJS = require("whatsapp-web.js");
 const config = require("../config/config.json");
 
+/**
+ * @param {WAWebJS.Client} client
+ * @param {WAWebJS.Message} message
+ * @param {string} args
+ */
 async function reply(client, message, args) {
     const match = args.match(/^(.+) \| (.+)$/);
     if (match === null) {
