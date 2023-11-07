@@ -31,14 +31,12 @@
     "name": "StickerBOT",
     "author": "stickerbot",
     "prefix": "!",
-    "timezone": "<insert here>",
     "groups": true
   }
   ```
   * config.name : *name for the sticker* (string)
   * config.author : *name for sticker maker* (string)
   * config.prefix : *prefix for command* (string)
-  * config.timezone : *timezone displays the time at the specified location* (string)
   * config.groups : *to filter whether bots can respond to group chats or not* (boolean)
 * [console.txt](config/console.txt)
   ```txt
