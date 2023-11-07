@@ -57,7 +57,7 @@ client.on('message', async (message) => {
         content = message.body;
     }
 
-    if (!content.startsWith(config.prefix)) { return; }
+    if (!content || !content.startsWith(config.prefix)) { return; }
     const noPrefix = content.slice(config.prefix.length);
     const indexOfSpace = noPrefix.indexOf(" ");
 
