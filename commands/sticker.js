@@ -2,13 +2,28 @@ const { logger } = require("../logger.js");
 const config = require('../config/config.json');
 
 async function inner(client, message, args, downloadMedia) {
+    let name, author;
+    if (args.length > 0) {
+        const match = args.match(/^(.+) \| (.+)$/);
+        if (match === null) {
+            await message.reply(`Invalid format. Usage: ${config.prefix}sticker <name> | <author>`);
+            return;
+        }
+
+        name = match[1];
+        author = match[2];
+    } else {
+        name = config.name;
+        author = config.author;
+    }
+
     const loading = await message.reply("*[⏳]* Loading..");
     const media = await downloadMedia();
 
     await message.reply(media, null, {
         sendMediaAsSticker: true,
-        stickerName: config.name, // Sticker Name = Edit in 'config/config.json'
-        stickerAuthor: config.author // Sticker Author = Edit in 'config/config.json'
+        stickerName: name,
+        stickerAuthor: author
     });
     await loading.delete(true);
 }

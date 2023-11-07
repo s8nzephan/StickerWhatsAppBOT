@@ -1,7 +1,9 @@
+const config = require("../config/config.json");
+
 async function reply(client, message, args) {
     const match = args.match(/^(.+) \| (.+)$/);
     if (match === null) {
-        await message.reply("Invalid format. Usage: change <name> | <author>");
+        await message.reply(`Invalid format. Usage: ${config.prefix}change <name> | <author>`);
         return;
     }
 
@@ -26,7 +28,7 @@ async function reply(client, message, args) {
 
 module.exports = {
     invokers: ["change"],
-    help: "Change a sticker's metadata. Usage: change <name> | <author>",
+    help: `Change a sticker's metadata. Usage: ${config.prefix}change <name> | <author>`,
     run: {
         plain: null,
         reply: reply,

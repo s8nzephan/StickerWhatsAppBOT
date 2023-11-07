@@ -6,8 +6,6 @@ const { logger } = require("./logger.js");
 
 const config = require('./config/config.json');
 const { registerCommands, registry } = require("./commands.js");
-// const { exit } = require('process');
-// exit()
 
 
 const client = new Client({
