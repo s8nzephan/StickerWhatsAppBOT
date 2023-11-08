@@ -12,6 +12,7 @@
 * Install dependencies:
   ```sh
   npm install
+  pip install "rembg[cli]"
   ```
 * Make sure you also have ffmpeg!
 * Start
@@ -31,13 +32,15 @@
     "name": "StickerBOT",
     "author": "stickerbot",
     "prefix": "!",
-    "groups": true
+    "groups": true,
+    "rembg": "<path to rembg>"
   }
   ```
   * config.name : *name for the sticker* (string)
   * config.author : *name for sticker maker* (string)
   * config.prefix : *prefix for command* (string)
   * config.groups : *to filter whether bots can respond to group chats or not* (boolean)
+  * config.rembg : *path to the rembg executable* (string)
 * [console.txt](config/console.txt)
   ```txt
   
