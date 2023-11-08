@@ -1,5 +1,5 @@
 const WAWebJS = require("whatsapp-web.js");
-const rembg = require("../util/rembg.js");
+const { rembg } = require("../util/util.js");
 const config = require('../config/config.json');
 
 /**
@@ -12,14 +12,10 @@ async function inner(client, message, args, downloadMedia) {
     const loading = await message.reply("*[⏳]* Loading..");
     const media = await downloadMedia();
 
-    const no_bg = await rembg.with_base64(media.data);
+    const no_bg = await rembg(media.data);
     if (no_bg !== null) {
         const newMedia = new WAWebJS.MessageMedia("image/png", no_bg);
-        await message.reply(newMedia, null, {
-            sendMediaAsSticker: true,
-            stickerName: config.name,
-            stickerAuthor: config.author
-        })
+        await message.reply(newMedia);
     } else {
         await message.reply("Error! See console for details.");
     }

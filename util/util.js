@@ -16,7 +16,7 @@ tmp.setGracefulCleanup();
  * The return value is a string on success, and null on error.
  * @param {string} input
  */
-async function with_base64(input) {
+async function rembg(input) {
     const inputData = Buffer.from(input, "base64");
 
     const inputFile = await tmp.file();
@@ -39,4 +39,4 @@ async function with_base64(input) {
     }
 }
 
-module.exports.with_base64 = with_base64;
+module.exports.rembg = rembg;
