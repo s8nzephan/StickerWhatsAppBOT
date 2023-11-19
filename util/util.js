@@ -39,4 +39,31 @@ async function rembg(input) {
     }
 }
 
-module.exports.rembg = rembg;
+function secondsToDhms(seconds) {
+    seconds = Number(seconds)
+    if (seconds === 0) {
+        return "0 seconds";
+    }
+
+    const d = Math.floor(seconds / (3600 * 24))
+    const h = Math.floor((seconds % (3600 * 24)) / 3600)
+    const m = Math.floor((seconds % 3600) / 60)
+    const s = Math.floor(seconds % 60)
+
+    const dDisplay = d > 0 ? d + (d == 1 ? " day, " : " days, ") : ""
+    const hDisplay = h > 0 ? h + (h == 1 ? " hour, " : " hours, ") : ""
+    const mDisplay = m > 0 ? m + (m == 1 ? " minute, " : " minutes, ") : ""
+    const sDisplay = s > 0 ? s + (s == 1 ? " second" : " seconds") : ""
+
+    const output = (dDisplay + hDisplay + mDisplay + sDisplay).trimEnd();
+    if (output.endsWith(',')) {
+        return output.slice(0, output.length - 1);
+    } else {
+        return output;
+    }
+}
+
+module.exports = {
+    rembg: rembg,
+    secondsToDhms: secondsToDhms
+}
